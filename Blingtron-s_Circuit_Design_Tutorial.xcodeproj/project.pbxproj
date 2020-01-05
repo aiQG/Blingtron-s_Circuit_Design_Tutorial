@@ -27,6 +27,7 @@
 		59B8529523C1B65500C61470 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		59B8529723C1B65500C61470 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		59B8529823C1B65500C61470 /* Blingtron_s_Circuit_Design_Tutorial.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Blingtron_s_Circuit_Design_Tutorial.entitlements; sourceTree = "<group>"; };
+		59B8529E23C1B69100C61470 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +44,7 @@
 		59B8527C23C1B65400C61470 = {
 			isa = PBXGroup;
 			children = (
+				59B8529E23C1B69100C61470 /* README.md */,
 				59B8528723C1B65400C61470 /* Blingtron-s_Circuit_Design_Tutorial */,
 				59B8528623C1B65400C61470 /* Products */,
 			);
