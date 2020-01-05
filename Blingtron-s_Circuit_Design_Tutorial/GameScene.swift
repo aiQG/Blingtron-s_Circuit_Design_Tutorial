@@ -15,7 +15,11 @@ class GameScene: SKScene {
     private var spinnyNode : SKShapeNode?
     
     override func didMove(to view: SKView) {
-        
+        let expnode = SKEmitterNode(fileNamed: "Point")!
+		expnode.position = CGPoint(x: 100, y: 100)
+		expnode.name = "testPoint"
+		addChild(expnode)
+		
     }
     
     
@@ -29,6 +33,8 @@ class GameScene: SKScene {
 
     override func mouseDown(with event: NSEvent) {
         self.touchDown(atPoint: event.location(in: self))
+//		print(event.allTouches().first!)
+		print(self.nodes(at: event.location(in: self)))
     }
     
     

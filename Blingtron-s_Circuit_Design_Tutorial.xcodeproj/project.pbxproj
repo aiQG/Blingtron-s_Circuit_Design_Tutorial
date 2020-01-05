@@ -14,6 +14,7 @@
 		59B8529123C1B65500C61470 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B8529023C1B65500C61470 /* ViewController.swift */; };
 		59B8529323C1B65500C61470 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59B8529223C1B65500C61470 /* Assets.xcassets */; };
 		59B8529623C1B65500C61470 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 59B8529423C1B65500C61470 /* Main.storyboard */; };
+		59B852A023C1BF0400C61470 /* Point.sks in Resources */ = {isa = PBXBuildFile; fileRef = 59B8529F23C1BF0400C61470 /* Point.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		59B8529723C1B65500C61470 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		59B8529823C1B65500C61470 /* Blingtron_s_Circuit_Design_Tutorial.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Blingtron_s_Circuit_Design_Tutorial.entitlements; sourceTree = "<group>"; };
 		59B8529E23C1B69100C61470 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		59B8529F23C1BF0400C61470 /* Point.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Point.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				59B8528E23C1B65500C61470 /* GameScene.swift */,
 				59B8529023C1B65500C61470 /* ViewController.swift */,
 				59B8529223C1B65500C61470 /* Assets.xcassets */,
+				59B8529F23C1BF0400C61470 /* Point.sks */,
 				59B8529423C1B65500C61470 /* Main.storyboard */,
 				59B8529723C1B65500C61470 /* Info.plist */,
 				59B8529823C1B65500C61470 /* Blingtron_s_Circuit_Design_Tutorial.entitlements */,
@@ -135,6 +138,7 @@
 				59B8528B23C1B65500C61470 /* GameScene.sks in Resources */,
 				59B8529323C1B65500C61470 /* Assets.xcassets in Resources */,
 				59B8528D23C1B65500C61470 /* Actions.sks in Resources */,
+				59B852A023C1BF0400C61470 /* Point.sks in Resources */,
 				59B8529623C1B65500C61470 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
