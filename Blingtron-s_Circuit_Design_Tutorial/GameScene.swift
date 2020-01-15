@@ -27,12 +27,18 @@ class GameScene: SKScene {
 		
 		
 		linePath = CGMutablePath()
-		linePath?.addLines(between: [CGPoint(x: -50, y: -50),CGPoint(x: -50, y: 50),CGPoint(x: 50, y: 50),CGPoint(x: 50, y: -50),CGPoint(x: -50, y: -50)])
+		linePath?.addLines(
+			between: [CGPoint(x: -50, y: -50),
+					  CGPoint(x: -50, y: 50),
+					  CGPoint(x: 50, y: 50),
+					  CGPoint(x: 50, y: -50),
+					  CGPoint(x: -50, y: -50)]	//最后一个为第0个, 用于封闭图形
+		)
 		skShape?.path = linePath
 		skShape?.strokeColor = .red
 		addChild(skShape!)
 		
-		for index in 0...(skShape?.path!.points)!.count-1 {
+		for index in 0...(skShape?.path!.points)!.count-2 {
 			let node = SKEmitterNode(fileNamed: "Point")
 			node?.position = (skShape?.path!.points)![index]
 			node?.zPosition = 1
