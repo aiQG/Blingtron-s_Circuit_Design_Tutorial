@@ -18,13 +18,6 @@ class GameScene: SKScene {
 	private var secondPoint: SKEmitterNode? = nil
 	
 	
-//	var expnode0:SKEmitterNode?
-//	var expnode1:SKEmitterNode?
-//	var expnode2:SKEmitterNode?
-//	var expnode3:SKEmitterNode?
-	
-//	var skLine:SKShapeNode?
-	
 	var skShape:SKShapeNode?
 	var linePath:CGMutablePath?
 	
@@ -32,38 +25,6 @@ class GameScene: SKScene {
 		
 		skShape = SKShapeNode()
 		
-		
-//        expnode0 = SKEmitterNode(fileNamed: "Point")!
-//		expnode0!.position = CGPoint(x: 50, y: 50)
-//		expnode0!.zPosition = 1
-//		expnode0!.name = "testPoint0"
-//		skShape!.addChild(expnode0!)
-//
-//		expnode1 = SKEmitterNode(fileNamed: "Point")!
-//		expnode1!.position = CGPoint(x: 50, y: -50)
-//		expnode1!.zPosition = 1
-//		expnode1!.name = "testPoint1"
-//		skShape!.addChild(expnode1!)
-//
-//		expnode2 = SKEmitterNode(fileNamed: "Point")!
-//		expnode2!.position = CGPoint(x: -50, y: -50)
-//		expnode2!.zPosition = 1
-//		expnode2!.name = "testPoint2"
-//		skShape!.addChild(expnode2!)
-//
-//		expnode3 = SKEmitterNode(fileNamed: "Point")!
-//		expnode3!.position = CGPoint(x: -50, y: 50)
-//		expnode3!.zPosition = 1
-//		expnode3!.name = "testPoint3"
-//		skShape!.addChild(expnode3!)
-		
-//		skLine = SKShapeNode()
-//		linePath = CGMutablePath()
-//		linePath!.move(to: CGPoint(x: expnode0!.position.x, y: expnode0!.position.y))
-//		linePath!.addLine(to: CGPoint(x: expnode1!.position.x, y: expnode1!.position.y))
-//		skLine!.path = linePath
-//		skLine!.strokeColor = .red
-//		addChild(skLine!)
 		
 		linePath = CGMutablePath()
 		linePath?.addLines(between: [CGPoint(x: -50, y: -50),CGPoint(x: -50, y: 50),CGPoint(x: 50, y: 50),CGPoint(x: 50, y: -50),CGPoint(x: -50, y: -50)])
@@ -137,18 +98,13 @@ class GameScene: SKScene {
     }
 }
 
-
+//导出CGPath的点数组
 extension CGPath {
-
-  ///< this is a computed property
   var points: [CGPoint] {
 
-     ///< this is a local container where we will store our CGPoints
      var arrPoints: [CGPoint] = []
 
-     ///< applyWithBlock lets us examine each element of the CGPath, and decide what to do
      self.applyWithBlock { element in
-
         switch element.pointee.type
         {
         case .moveToPoint, .addLineToPoint:
@@ -168,8 +124,6 @@ extension CGPath {
         }
      }
 
-    ///< We are now done collecting our CGPoints and so we can return the result
     return arrPoints
-
   }
 }
