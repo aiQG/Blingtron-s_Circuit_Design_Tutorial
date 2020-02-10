@@ -35,20 +35,14 @@ class GameScene: SKScene {
 	
     override func didMove(to view: SKView) {
 		
-		skShape = SKShapeNode()
 		pointList.append(pointList[0])//最后一个为第0个, 用于封闭图形
-		linePath = CGMutablePath()
-		linePath?.addLines(between: pointList)
-		skShape?.path = linePath
-		skShape?.strokeColor = .red
-		addChild(skShape!)
 		
 		for index in 0...pointList.count-2 {
 			let node = SKEmitterNode(fileNamed: "Point")
 			node?.position = pointList[index]
 			node?.zPosition = 1
 			node?.name = "testPt\(index)"
-			skShape!.addChild(node!)
+			addChild(node!)
 			unSelectedPointColor = node!.particleColorSequence
 		}
 		
@@ -89,25 +83,10 @@ class GameScene: SKScene {
 		point2.particleColorSequence = unSelectedPointColor
 		firstPoint = nil
 		
-		//lines
-		print(pointList)
-		pointList.swapAt(
-			pointList.firstIndex(of: point1.position)!,
-			pointList.firstIndex(of: point2.position)!
-		)
-		pointList.remove(at: pointList.count-1)
-		pointList.append(pointList[0])
-		print(pointList)
-		
 	}
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-		removeChildren(in: [skShape!])
-		linePath = CGMutablePath()
-		linePath?.addLines(between: pointList)
-		skShape?.path = linePath
-		addChild(skShape!)
     }
 }
 
