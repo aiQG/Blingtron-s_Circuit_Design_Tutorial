@@ -153,11 +153,10 @@ extension CGPath {
 	}
 }
 
-//线动画
 extension SKAction {
-	static func lineAnim(fromPath: CGPath, toPath: CGPath, duration: Double = 0.5) -> SKAction
-	{
-		return SKAction.customAction(withDuration: duration, actionBlock: { (node: SKNode!, elapsedTime: CGFloat) -> Void in
+	// 线动画
+	static func lineAnim(fromPath: CGPath, toPath: CGPath, duration: Double = 0.5) -> SKAction {
+		return SKAction.customAction(withDuration: duration){ (node: SKNode!, elapsedTime: CGFloat) -> Void in
 			let fraction = CGFloat(elapsedTime / CGFloat(duration))
 			let start = fromPath
 			let end = toPath
@@ -171,6 +170,5 @@ extension SKAction {
 			
 			(node as? SKShapeNode)?.path = trans
 		}
-		)
 	}
 }
