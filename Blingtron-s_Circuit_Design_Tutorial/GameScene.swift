@@ -8,7 +8,7 @@
 
 import SpriteKit
 import GameplayKit
-
+import simd //矩阵、向量运算
 
 class GameScene: SKScene {
 	
@@ -16,6 +16,9 @@ class GameScene: SKScene {
 	private var SelectedPointColor: SKKeyframeSequence? = nil
 	private var firstPoint: SKEmitterNode? = nil
 	private var secondPoint: SKEmitterNode? = nil
+	private let CrossLineColor: NSColor = NSColor(red: 1, green: 0.1, blue: 0.1, alpha: 1)
+	private let unCrossLineColor: NSColor = NSColor(red: 0.2, green: 0.5, blue: 1, alpha: 1)
+	
 	
 	var pointList = [
 		CGPoint(x: -50, y: -50),
@@ -49,7 +52,8 @@ class GameScene: SKScene {
 			path.move(to: pA!.position)
 			path.addLine(to: pB!.position)
 			line.path = path
-			line.strokeColor = .red
+			line.strokeColor = unCrossLineColor
+			line.lineWidth = 3
 			line.name = "\(pA!.name!)-\(pB!.name!)"
 			addChild(line)
 			lineArr.append(line)
@@ -101,7 +105,6 @@ class GameScene: SKScene {
 			i.run(SKAction.lineAnim(fromPath: i.path!, toPath: topath, duration: 0.5))
 		}
 		
-		
 		//points
 		let point1Position = SKAction.move(
 			to: CGPoint(x: point1.position.x, y: point1.position.y),
@@ -119,7 +122,26 @@ class GameScene: SKScene {
 	}
 	
 	override func update(_ currentTime: TimeInterval) {
-		// Called before each frame is rendered
+		// 实时更新线的颜色(是否交叉)
+		for i in 0 ..< lineArr.count {
+			var flag: Bool = false
+			for j in 0 ..< lineArr.count {
+				if i == j {
+					continue
+				}
+				let selfPathPoint = lineArr[i].path?.points
+				let otherPathPoint = lineArr[j].path?.points
+				// 计算selfPath和otherPath是否交叉
+				let v1 = simd_double2(x: Double((selfPathPoint?.last!.x)! - (selfPathPoint?.first!.x)!), y: Double((selfPathPoint?.last!.y)! - (selfPathPoint?.first!.y)!))
+				let v2 = simd_double2(x: Double((otherPathPoint?.first!.x)! - (selfPathPoint?.first!.x)!), y: Double((otherPathPoint?.first!.y)! - (selfPathPoint?.first!.y)!))
+				let v3 = simd_double2(x: Double((otherPathPoint?.last!.x)! - (selfPathPoint?.first!.x)!), y: Double((otherPathPoint?.last!.y)! - (selfPathPoint?.first!.y)!))
+				let x0 = simd_double2x2([v1, v2]).determinant
+				let x1 = simd_double2x2([v1, v3]).determinant
+				// x0 * x1 < 0 为交叉
+				flag = flag || (x0 * x1 < 0.0) ? true : false
+			}
+			lineArr[i].strokeColor = flag ? CrossLineColor : unCrossLineColor
+		}
 	}
 }
 
