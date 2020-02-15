@@ -16,23 +16,40 @@ class GameScene: SKScene {
 	private var SelectedPointColor: SKKeyframeSequence? = nil
 	private var firstPoint: SKEmitterNode? = nil
 	private var secondPoint: SKEmitterNode? = nil
-	private let CrossLineColor: NSColor = NSColor(red: 1, green: 0.1, blue: 0.1, alpha: 1)
-	private let unCrossLineColor: NSColor = NSColor(red: 0.2, green: 0.5, blue: 1, alpha: 1)
+	private let CrossLineColor: NSColor = NSColor(red: 1, green: 0.1, blue: 0.1, alpha: 0.7)
+	private let notCrossLineColor: NSColor = NSColor(red: 0.2, green: 0.5, blue: 1, alpha: 0.7)
 	
 	
-	var pointList = [
-		CGPoint(x: -50, y: -50),
-		CGPoint(x: -50, y:  50),
-		CGPoint(x:  50, y:  50),
-		CGPoint(x:  50, y: -50)
+	let pointList = [
+		CGPoint(x:  50, y:  50),	//0
+		CGPoint(x:   0, y:  50),	//1
+		CGPoint(x: -25, y:  50),	//2
+		CGPoint(x: -50, y:  50),	//3
+		CGPoint(x: -50, y: -50),	//4
+		CGPoint(x:   0, y: -50),	//5
+		CGPoint(x:  25, y: -50),	//6
+		CGPoint(x:  50, y: -50),	//7
 	]
+	let connect: [(Int,Int)] = [
+		(0,1),
+		(1,2),
+		(2,3),
+		(3,4),
+		(4,5),
+		(5,6),
+		(6,7),
+		(7,0),
+		(1,6),
+		(2,5),
+	]
+	
 	
 	var lineArr: [SKShapeNode] = []
 	
 	
 	override func didMove(to view: SKView) {
 		// 创建点
-		for index in 0...pointList.count-1 {
+		for index in 0 ..< pointList.count {
 			let node = SKEmitterNode(fileNamed: "Point")
 			node?.position = pointList[index]
 			node?.zPosition = 1
@@ -42,17 +59,17 @@ class GameScene: SKScene {
 		}
 		
 		// 遍历点 并连起 线保存到数组
-		for i in 0 ..< pointList.count {
+		for i in 0 ..< connect.count {
 			//pA点为name小的, pB为name大的
-			let pA = childNode(withName: i < (i + 1) % pointList.count ? "\(i)" : "\((i + 1) % pointList.count)")
-			let pB = childNode(withName: i > (i + 1) % pointList.count ? "\(i)" : "\((i + 1) % pointList.count)")
+			let pA = childNode(withName: connect[i].0 < connect[i].1 ? "\(connect[i].0)" : "\(connect[i].1)")
+			let pB = childNode(withName: connect[i].0 > connect[i].1 ? "\(connect[i].0)" : "\(connect[i].1)")
 			
 			let line = SKShapeNode()
 			let path = CGMutablePath()
 			path.move(to: pA!.position)
 			path.addLine(to: pB!.position)
 			line.path = path
-			line.strokeColor = unCrossLineColor
+			line.strokeColor = notCrossLineColor
 			line.lineWidth = 3
 			line.name = "\(pA!.name!)-\(pB!.name!)"
 			addChild(line)
@@ -132,15 +149,46 @@ class GameScene: SKScene {
 				let selfPathPoint = lineArr[i].path?.points
 				let otherPathPoint = lineArr[j].path?.points
 				// 计算selfPath和otherPath是否交叉
-				let v1 = simd_double2(x: Double((selfPathPoint?.last!.x)! - (selfPathPoint?.first!.x)!), y: Double((selfPathPoint?.last!.y)! - (selfPathPoint?.first!.y)!))
-				let v2 = simd_double2(x: Double((otherPathPoint?.first!.x)! - (selfPathPoint?.first!.x)!), y: Double((otherPathPoint?.first!.y)! - (selfPathPoint?.first!.y)!))
-				let v3 = simd_double2(x: Double((otherPathPoint?.last!.x)! - (selfPathPoint?.first!.x)!), y: Double((otherPathPoint?.last!.y)! - (selfPathPoint?.first!.y)!))
+				let v1 = simd_double2(x: Double((selfPathPoint?.last!.x)! - (selfPathPoint?.first!.x)!),
+									  y: Double((selfPathPoint?.last!.y)! - (selfPathPoint?.first!.y)!))
+				let v2 = simd_double2(x: Double((otherPathPoint?.first!.x)! - (selfPathPoint?.first!.x)!),
+									  y: Double((otherPathPoint?.first!.y)! - (selfPathPoint?.first!.y)!))
+				let v3 = simd_double2(x: Double((otherPathPoint?.last!.x)! - (selfPathPoint?.first!.x)!),
+									  y: Double((otherPathPoint?.last!.y)! - (selfPathPoint?.first!.y)!))
 				let x0 = simd_double2x2([v1, v2]).determinant
 				let x1 = simd_double2x2([v1, v3]).determinant
-				// x0 * x1 < 0 为交叉
-				flag = flag || (x0 * x1 < 0.0) ? true : false
+				let result0 = x0 * x1
+				
+				let v4 = simd_double2(x: Double((otherPathPoint?.last!.x)! - (otherPathPoint?.first!.x)!),
+									  y: Double((otherPathPoint?.last!.y)! - (otherPathPoint?.first!.y)!))
+				let v5 = simd_double2(x: Double((selfPathPoint?.first!.x)! - (otherPathPoint?.first!.x)!),
+									  y: Double((selfPathPoint?.first!.y)! - (otherPathPoint?.first!.y)!))
+				let v6 = simd_double2(x: Double((selfPathPoint?.last!.x)! - (otherPathPoint?.first!.x)!),
+									  y: Double((selfPathPoint?.last!.y)! - (otherPathPoint?.first!.y)!))
+				let x2 = simd_double2x2([v4, v5]).determinant
+				let x3 = simd_double2x2([v4, v6]).determinant
+				let result1 = x2 * x3
+				// result < 0 为相交
+				flag = flag || (result0 < 0 && result1 < 0)
+				
+				// 判断两条线段在同一条直线上的情况
+				if (result0 == 0 && result1 == 0){
+					if(lineArr[i].path!.contains(otherPathPoint!.first!)
+						&& lineArr[i].path!.contains(otherPathPoint!.last!))
+						|| (lineArr[j].path!.contains(selfPathPoint!.first!)
+							&& lineArr[j].path!.contains(selfPathPoint!.last!)){	// 两条线段中的一条完全包含另一条
+						flag = flag || true
+					} else if (selfPathPoint!.first! != otherPathPoint!.first!
+						&& selfPathPoint!.first! != otherPathPoint!.last!
+						&& selfPathPoint!.last! != otherPathPoint!.first!
+						&& selfPathPoint!.last! != otherPathPoint!.last!)
+						&& (lineArr[i].path!.contains(otherPathPoint!.first!)
+							|| lineArr[i].path!.contains(otherPathPoint!.last!)){	// 两条线段中的一条部分包含另一条(不含端点)(与上面判断存在交集)
+						flag = flag || true
+					}
+				}
 			}
-			lineArr[i].strokeColor = flag ? CrossLineColor : unCrossLineColor
+			lineArr[i].strokeColor = flag ? CrossLineColor : notCrossLineColor
 		}
 	}
 }
