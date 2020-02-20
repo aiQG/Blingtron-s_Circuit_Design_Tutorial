@@ -43,7 +43,6 @@ class GameScene: SKScene {
 		(2,5),
 	]
 	
-	
 	var lineArr: [SKShapeNode] = []
 	
 	
@@ -76,6 +75,8 @@ class GameScene: SKScene {
 			lineArr.append(line)
 		}
 		
+		// 随机打乱
+		randomSwap(times: 10)
 	}
 	
 	
@@ -98,7 +99,7 @@ class GameScene: SKScene {
 		}
 	}
 	
-	func pointSwap(point1:SKEmitterNode, point2:SKEmitterNode) -> Void {
+	private func pointSwap(point1:SKEmitterNode, point2:SKEmitterNode, duration: Double = 0.5) {
 		//lines
 		for i in lineArr {
 			let topath = CGMutablePath()
@@ -119,16 +120,16 @@ class GameScene: SKScene {
 				topath.addLine(to: i.path!.points.last!)
 			}
 			
-			i.run(SKAction.lineAnim(fromPath: i.path!, toPath: topath, duration: 0.5))
+			i.run(SKAction.lineAnim(fromPath: i.path!, toPath: topath, duration: duration))
 		}
 		
 		//points
 		let point1Position = SKAction.move(
 			to: CGPoint(x: point1.position.x, y: point1.position.y),
-			duration: 0.5)
+			duration: duration)
 		let point2Position = SKAction.move(
 			to: CGPoint(x: point2.position.x, y: point2.position.y),
-			duration: 0.5)
+			duration: duration)
 		point1.run(point2Position)
 		point2.run(point1Position)
 		
@@ -137,6 +138,44 @@ class GameScene: SKScene {
 		firstPoint = nil
 		
 	}
+	
+	// 随机打乱
+	private func randomSwap(times: Int) {
+		for _ in 0 ..< times {
+			let n0 = Int.random(in: 0..<pointList.count)
+			var n1 = Int.random(in: 0..<pointList.count)
+			while n0 == n1 {
+				n1 = Int.random(in: 0..<pointList.count)
+			}
+			let p0 = childNode(withName: String(n0)) as! SKEmitterNode
+			let p1 = childNode(withName: String(n1)) as! SKEmitterNode
+			
+			for i in lineArr {
+				let topath = CGMutablePath()
+				//线起点
+				if i.name!.hasPrefix(p0.name!) {
+					topath.move(to: p1.position)
+				} else if i.name!.hasPrefix(p1.name!) {
+					topath.move(to: p0.position)
+				} else {
+					topath.move(to: i.path!.points.first!)
+				}
+				//线终点
+				if i.name!.hasSuffix(p0.name!) {
+					topath.addLine(to: p1.position)
+				} else if i.name!.hasSuffix(p1.name!) {
+					topath.addLine(to: p0.position)
+				} else {
+					topath.addLine(to: i.path!.points.last!)
+				}
+				i.path = topath
+			}
+			
+			swap(&p0.position, &p1.position)
+		}
+	}
+	
+	
 	
 	override func update(_ currentTime: TimeInterval) {
 		// 实时更新线的颜色(是否交叉)
