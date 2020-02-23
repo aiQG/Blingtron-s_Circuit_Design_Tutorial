@@ -179,6 +179,7 @@ class GameScene: SKScene {
 	
 	override func update(_ currentTime: TimeInterval) {
 		// 实时更新线的颜色(是否交叉)
+		var success: Bool = true
 		for i in 0 ..< lineArr.count {
 			var flag: Bool = false
 			for j in 0 ..< lineArr.count {
@@ -228,6 +229,10 @@ class GameScene: SKScene {
 				}
 			}
 			lineArr[i].strokeColor = flag ? CrossLineColor : notCrossLineColor
+			success = flag ? success && false : success && true
+		}
+		if success {
+			print("success")
 		}
 	}
 }
