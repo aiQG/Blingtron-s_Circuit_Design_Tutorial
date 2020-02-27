@@ -19,6 +19,10 @@ class GameScene: SKScene {
 	private let CrossLineColor: NSColor = NSColor(red: 1, green: 0.1, blue: 0.1, alpha: 0.7)
 	private let notCrossLineColor: NSColor = NSColor(red: 0.2, green: 0.5, blue: 1, alpha: 0.7)
 	
+	private var success: Bool = true
+	private var OKButton: SKSpriteNode =
+		SKSpriteNode(color: NSColor(red: 0.2, green: 0.5, blue: 1, alpha: 1),
+													  size: CGSize(width: 100, height: 50))
 	
 	let pointList = [
 		CGPoint(x:  50, y:  50),	//0
@@ -47,6 +51,16 @@ class GameScene: SKScene {
 	
 	
 	override func didMove(to view: SKView) {
+		// 创建button
+		let label = SKLabelNode(text: "GO!")
+		label.fontSize = 50
+		label.position = CGPoint(x: 0, y: -OKButton.size.height/2)
+		OKButton.addChild(label)
+		OKButton.name = "OKButton"
+		label.name = OKButton.name
+		OKButton.position = CGPoint(x: 150, y: -60)
+		OKButton.zPosition = 2
+		self.addChild(OKButton)
 		// 创建点
 		for index in 0 ..< pointList.count {
 			let node = SKEmitterNode(fileNamed: "Point")
@@ -81,11 +95,16 @@ class GameScene: SKScene {
 	
 	
 	override func mouseDown(with event: NSEvent) {
+		if self.nodes(at: event.location(in: self)).first?.name == "OKButton" {
+			if success {
+				print("success")
+			}
+			return
+		}
 		
 		guard let beSelectedPoint = self.nodes(at: event.location(in: self)).first as? SKEmitterNode else {
 			return
 		}
-		
 		beSelectedPoint.particleColorSequence = beSelectedPoint.particleColorSequence == SelectedPointColor ? unSelectedPointColor : SelectedPointColor
 		
 		if firstPoint == nil && beSelectedPoint.particleColorSequence == SelectedPointColor  {
@@ -179,7 +198,7 @@ class GameScene: SKScene {
 	
 	override func update(_ currentTime: TimeInterval) {
 		// 实时更新线的颜色(是否交叉)
-		var success: Bool = true
+		success = true
 		for i in 0 ..< lineArr.count {
 			var flag: Bool = false
 			for j in 0 ..< lineArr.count {
@@ -230,9 +249,6 @@ class GameScene: SKScene {
 			}
 			lineArr[i].strokeColor = flag ? CrossLineColor : notCrossLineColor
 			success = flag ? success && false : success && true
-		}
-		if success {
-			print("success")
 		}
 	}
 }
