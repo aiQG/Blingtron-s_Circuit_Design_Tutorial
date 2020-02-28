@@ -5,3 +5,5 @@
 
 规则:
 调整节点位置, 使连线不交叉
+
+[iSO版本](https://github.com/aiQG/Blingtron-s_Circuit_Design_Tutorial-iOS)
